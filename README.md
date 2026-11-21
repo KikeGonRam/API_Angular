@@ -1,33 +1,26 @@
 # secure-api — API REST con Node.js y MySQL
 
-API REST construida con **Express** y **MySQL**, organizada en una arquitectura **MVC** (modelos, controladores y rutas). Gestiona usuarios, productos y administradores, con validación de entradas y configuración por variables de entorno.
+API REST con **Express** y **MySQL** en arquitectura **MVC**. Gestiona usuarios, productos y administradores, con validación de entradas y configuración por variables de entorno.
 
+[![Seguridad](https://github.com/KikeGonRam/API_Angular/actions/workflows/security.yml/badge.svg)](https://github.com/KikeGonRam/API_Angular/actions/workflows/security.yml)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=nodedotjs&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-mysql2-4479A1?logo=mysql&logoColor=white)
-![Express Validator](https://img.shields.io/badge/validación-express--validator-2C3E50)
 
-## Características
+[Seguridad](SECURITY.md)
 
-- **Arquitectura MVC:** `models/`, `controllers/`, `routes/` y `middleware/`.
-- **Validación de entradas** con `express-validator`.
-- **CORS** habilitado y configuración por `.env` con `dotenv`.
-- Conexión a MySQL mediante `mysql2`.
-- Rutas separadas por recurso: usuarios, productos, administradores y pruebas.
+## Arquitectura
 
-> El middleware de autenticación (`middleware/auth.js`) está planteado como punto de extensión para JWT; conviene completarlo antes de usar la API en producción.
+| Capa | Archivos |
+| --- | --- |
+| Servidor | `server.js` (Express + CORS) |
+| Configuración | `config/database.js` (conexión a MySQL con `mysql2`) |
+| Modelos | `models/user.js`, `product.js`, `admin.js` |
+| Controladores | `controllers/` (lógica por recurso) |
+| Rutas | `routes/` (users, products, admin, test) |
+| Middleware | `middleware/validate.js`, `auth.js` |
 
-## Estructura
-
-```
-secure-api/
-├── server.js            # Arranque del servidor Express
-├── config/database.js   # Conexión a MySQL
-├── models/              # user.js · product.js · admin.js
-├── controllers/         # Lógica de cada recurso
-├── routes/              # userRoutes · productRoutes · adminRoutes · testRoutes
-├── middleware/          # auth.js (extensible) · validate.js
-└── .env.example         # Plantilla de variables de entorno
-```
+> El middleware `auth.js` es un punto de extensión para JWT; conviene completarlo antes
+> de usar la API en producción.
 
 ## Requisitos
 
@@ -43,20 +36,20 @@ npm install
 cp .env.example .env
 ```
 
-Completa el archivo `.env`:
+Completa `.env`:
 
 | Variable | Descripción | Ejemplo |
 | --- | --- | --- |
 | `DB_HOST` | Host de MySQL | `localhost` |
-| `DB_USER` | Usuario de MySQL | `root` |
-| `DB_PASSWORD` | Contraseña de MySQL | |
+| `DB_USER` | Usuario | `root` |
+| `DB_PASSWORD` | Contraseña | |
 | `DB_NAME` | Base de datos | `secure_api_db` |
-| `PORT` | Puerto del servidor | `3000` |
+| `PORT` | Puerto | `3000` |
 
 ## Ejecución
 
 ```bash
-npm run dev    # desarrollo, con recarga (nodemon)
+npm run dev    # desarrollo con recarga (nodemon)
 npm start      # producción (node server.js)
 ```
 
@@ -74,6 +67,12 @@ npm start      # producción (node server.js)
 - **users**: `id`, `username` (único), `email` (único), `password`, `created_at`.
 - **products**: `id`, `name`, `description`, `price`, `stock`, `created_at`.
 - **admins**: `id`, `user_id` (FK → users), `role`, `created_at`.
+
+## Seguridad
+
+Análisis estático (Semgrep) y escaneo de secretos (Gitleaks) corren en cada *push* y PR
+(ver [workflow](.github/workflows/security.yml)). El archivo `.env` no se versiona (usa
+`.env.example`). Reporta vulnerabilidades según [SECURITY.md](SECURITY.md).
 
 ## Tecnologías
 
