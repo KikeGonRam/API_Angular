@@ -1,59 +1,84 @@
-## Project Title
-# secure-api
+# secure-api — API REST con Node.js y MySQL
 
-## Description
-API RESTful segura con Node.js y MySQL
+API REST construida con **Express** y **MySQL**, organizada en una arquitectura **MVC** (modelos, controladores y rutas). Gestiona usuarios, productos y administradores, con validación de entradas y configuración por variables de entorno.
 
-## Prerequisites
-- Node.js (check version with `node -v`)
-- MySQL (or any compatible MySQL server)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=nodedotjs&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-mysql2-4479A1?logo=mysql&logoColor=white)
+![Express Validator](https://img.shields.io/badge/validación-express--validator-2C3E50)
 
-## Installation
-1. Clone the repository: `git clone https://your-repository-url-here.git`
-2. Navigate to the project directory: `cd secure-api`
-3. Install dependencies: `npm install`
+## Características
 
-## Environment Variables Setup
-This project uses a `.env` file to manage environment variables. A file named `.env.example` is provided as a template.
+- **Arquitectura MVC:** `models/`, `controllers/`, `routes/` y `middleware/`.
+- **Validación de entradas** con `express-validator`.
+- **CORS** habilitado y configuración por `.env` con `dotenv`.
+- Conexión a MySQL mediante `mysql2`.
+- Rutas separadas por recurso: usuarios, productos, administradores y pruebas.
 
-1. Create a `.env` file by copying the example: `cp .env.example .env`
-2. Update the `.env` file with your specific configurations:
-    - `DB_HOST`: Hostname of the MySQL server (e.g., `localhost`)
-    - `DB_USER`: MySQL username (e.g., `root`)
-    - `DB_PASSWORD`: MySQL password (e.g., `password`)
-    - `DB_NAME`: Name of the database to be used (e.g., `secure_api_db`)
-    - `PORT`: Port on which the server will run (e.g., `3000`)
+> El middleware de autenticación (`middleware/auth.js`) está planteado como punto de extensión para JWT; conviene completarlo antes de usar la API en producción.
 
-## Available Scripts
-- `npm start`: Runs the application in production mode using `node server.js`.
-- `npm run dev`: Runs the application in development mode using `nodemon server.js`. Nodemon will automatically restart the server when file changes are detected.
+## Estructura
 
-## API Endpoints
-The API provides the following main route groups:
-- `/api/users`: For user management operations like registration, login, and profile updates.
-- `/api/products`: For managing products, including listing, creating, updating, and deleting products.
-- `/api/admin`: For administrative functionalities, such as managing user roles or other admin-specific tasks.
-- `/api/test`: Contains test routes for basic API connectivity checks.
+```
+secure-api/
+├── server.js            # Arranque del servidor Express
+├── config/database.js   # Conexión a MySQL
+├── models/              # user.js · product.js · admin.js
+├── controllers/         # Lógica de cada recurso
+├── routes/              # userRoutes · productRoutes · adminRoutes · testRoutes
+├── middleware/          # auth.js (extensible) · validate.js
+└── .env.example         # Plantilla de variables de entorno
+```
 
-(A detailed explanation of each endpoint, its HTTP methods, and expected payload is typically provided in separate API documentation, e.g., using Swagger or Postman collections.)
+## Requisitos
 
-## Database Schema
-The application initializes and uses the following tables in the MySQL database:
-- **users**: Stores user information.
-    - `id`: INT AUTO_INCREMENT PRIMARY KEY
-    - `username`: VARCHAR(50) NOT NULL UNIQUE
-    - `email`: VARCHAR(100) NOT NULL UNIQUE
-    - `password`: VARCHAR(255) NOT NULL
-    - `created_at`: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-- **products**: Stores product details.
-    - `id`: INT AUTO_INCREMENT PRIMARY KEY
-    - `name`: VARCHAR(100) NOT NULL
-    - `description`: TEXT
-    - `price`: DECIMAL(10, 2) NOT NULL
-    - `stock`: INT NOT NULL
-    - `created_at`: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-- **admins**: Stores information about admin users, linking to the `users` table.
-    - `id`: INT AUTO_INCREMENT PRIMARY KEY
-    - `user_id`: INT NOT NULL (FOREIGN KEY REFERENCES users(id))
-    - `role`: VARCHAR(50) NOT NULL
-    - `created_at`: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+- Node.js
+- MySQL Server
+
+## Instalación
+
+```bash
+git clone https://github.com/KikeGonRam/API_Angular.git
+cd API_Angular
+npm install
+cp .env.example .env
+```
+
+Completa el archivo `.env`:
+
+| Variable | Descripción | Ejemplo |
+| --- | --- | --- |
+| `DB_HOST` | Host de MySQL | `localhost` |
+| `DB_USER` | Usuario de MySQL | `root` |
+| `DB_PASSWORD` | Contraseña de MySQL | |
+| `DB_NAME` | Base de datos | `secure_api_db` |
+| `PORT` | Puerto del servidor | `3000` |
+
+## Ejecución
+
+```bash
+npm run dev    # desarrollo, con recarga (nodemon)
+npm start      # producción (node server.js)
+```
+
+## Endpoints
+
+| Grupo | Ruta | Para |
+| --- | --- | --- |
+| Usuarios | `/api/users` | registro, inicio de sesión y perfil |
+| Productos | `/api/products` | listar, crear, actualizar y eliminar |
+| Administradores | `/api/admin` | funciones administrativas y roles |
+| Pruebas | `/api/test` | verificación de conectividad |
+
+## Esquema de la base de datos
+
+- **users**: `id`, `username` (único), `email` (único), `password`, `created_at`.
+- **products**: `id`, `name`, `description`, `price`, `stock`, `created_at`.
+- **admins**: `id`, `user_id` (FK → users), `role`, `created_at`.
+
+## Tecnologías
+
+Node.js · Express · MySQL (mysql2) · express-validator · CORS · dotenv
+
+---
+
+Proyecto de Luis Enrique González Ramírez — [github.com/KikeGonRam](https://github.com/KikeGonRam)
